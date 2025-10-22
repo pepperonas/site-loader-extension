@@ -1,0 +1,60 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # Triggert bei Tags wie v1.0, v1.1, etc.
+  workflow_dispatch:  # Ermöglicht manuelles Auslösen
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get version from manifest
+        id: get_version
+        run: |
+          VERSION=$(grep -Po '"version":\s*"\K[^"]*' manifest.json)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Extension Version: $VERSION"
+
+      - name: Create release archive
+        run: |
+          zip -r website-als-html-herunterladen-v${{ steps.get_version.outputs.version }}.zip \
+            manifest.json \
+            popup.html \
+            popup.js \
+            content.js \
+            icon16.png \
+            icon48.png \
+            icon128.png \
+            README.md \
+            -x "*.git*" "*.DS_Store"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: website-als-html-herunterladen-v${{ steps.get_version.outputs.version }}.zip
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          body: |
+            ## Website als HTML herunterladen - Version ${{ steps.get_version.outputs.version }}
+
+            Chrome/Chromium Extension zum Herunterladen von Webseiten als eigenständige HTML-Datei.
+
+            ### Installation
+            1. ZIP-Datei herunterladen und entpacken
+            2. Chrome öffnen und zu `chrome://extensions/` navigieren
+            3. "Entwicklermodus" aktivieren
+            4. "Entpackte Extension laden" klicken
+            5. Entpackten Ordner auswählen
+
+            ### Änderungen
+            Siehe [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) für Details.
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
