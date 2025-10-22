@@ -24,8 +24,8 @@ Die Extension bettet automatisch ein:
 
 ### Fertiges Release herunterladen (empfohlen)
 
-1. Zur [Releases-Seite](https://github.com/pepperonas/site-loader-extension/releases) gehen
-2. Neueste Version herunterladen (ZIP-Datei)
+1. Zur [neuesten Release-Version](https://github.com/pepperonas/site-loader-extension/releases/latest) gehen
+2. ZIP-Datei unter "Assets" herunterladen
 3. ZIP-Datei entpacken
 4. Chrome/Chromium öffnen und zu `chrome://extensions/` navigieren
 5. "Entwicklermodus" aktivieren (oben rechts)
