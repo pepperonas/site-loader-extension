@@ -1,14 +1,17 @@
 {
   "manifest_version": 3,
   "name": "Site Loader Extension",
-  "version": "1.0",
-  "description": "Lädt die aktuelle Website als einzelne HTML-Datei mit eingebetteten Ressourcen herunter",
+  "version": "2.0",
+  "description": "Lädt die aktuelle Website als einzelne HTML-Datei oder ZIP-Archiv mit allen Ressourcen herunter",
   "author": "Martin Pfeffer",
   "permissions": [
     "activeTab",
     "scripting",
     "downloads"
   ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "action": {
     "default_popup": "popup.html",
     "default_icon": {

@@ -3,62 +3,208 @@
 <head>
   <meta charset="UTF-8">
   <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      width: 300px;
+      width: 340px;
       padding: 20px;
-      font-family: Arial, sans-serif;
-    }
-    h2 {
-      margin: 0 0 15px 0;
-      font-size: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #fafafa;
       color: #333;
     }
-    button {
-      width: 100%;
-      padding: 12px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-      margin-bottom: 10px;
+
+    h2 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    button:hover {
-      background-color: #45a049;
+
+    h2 .icon {
+      font-size: 18px;
     }
-    button:disabled {
-      background-color: #cccccc;
-      cursor: not-allowed;
+
+    /* Mode Toggle */
+    .mode-toggle {
+      display: flex;
+      background: #e8e8e8;
+      border-radius: 8px;
+      padding: 3px;
+      margin-bottom: 14px;
     }
-    #status {
-      margin-top: 15px;
-      padding: 10px;
-      border-radius: 4px;
+
+    .mode-toggle label {
+      flex: 1;
+      text-align: center;
+      padding: 8px 10px;
       font-size: 12px;
+      font-weight: 500;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #666;
+    }
+
+    .mode-toggle input[type="radio"] {
       display: none;
     }
+
+    .mode-toggle input[type="radio"]:checked + label {
+      background: white;
+      color: #1a1a1a;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    /* Info text */
+    .mode-info {
+      font-size: 11px;
+      color: #888;
+      margin-bottom: 14px;
+      line-height: 1.4;
+    }
+
+    /* Download Button */
+    button {
+      width: 100%;
+      padding: 12px 16px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+      letter-spacing: 0.2px;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    button:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Progress Section */
+    #progressSection {
+      display: none;
+      margin-top: 14px;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: #2563eb;
+      border-radius: 3px;
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+
+    .progress-bar.indeterminate {
+      width: 30%;
+      animation: indeterminate 1.5s infinite ease-in-out;
+    }
+
+    @keyframes indeterminate {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(440%); }
+    }
+
+    .progress-text {
+      font-size: 11px;
+      color: #64748b;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .progress-stage {
+      font-weight: 500;
+    }
+
+    .progress-count {
+      color: #94a3b8;
+    }
+
+    /* Status */
+    #status {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      display: none;
+      line-height: 1.4;
+    }
+
     .success {
-      background-color: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
+      background: #f0fdf4;
+      color: #166534;
+      border: 1px solid #bbf7d0;
     }
+
     .error {
-      background-color: #f8d7da;
-      color: #721c24;
-      border: 1px solid #f5c6cb;
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
     }
-    .info {
-      background-color: #d1ecf1;
-      color: #0c5460;
-      border: 1px solid #bee5eb;
+
+    .stats {
+      margin-top: 6px;
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    .stats span {
+      margin-right: 10px;
     }
   </style>
 </head>
 <body>
-  <h2>Website herunterladen</h2>
-  <button id="downloadBtn">Website als HTML speichern</button>
+  <h2><span class="icon">&#128230;</span> Website herunterladen</h2>
+
+  <div class="mode-toggle">
+    <input type="radio" id="modeZip" name="mode" value="zip" checked>
+    <label for="modeZip">ZIP-Archiv</label>
+    <input type="radio" id="modeHtml" name="mode" value="html">
+    <label for="modeHtml">Einzelne HTML</label>
+  </div>
+
+  <div class="mode-info" id="modeInfo">
+    HTML + separate Asset-Dateien. Kleinere Dateien, vollständiger.
+  </div>
+
+  <button id="downloadBtn">Seite herunterladen</button>
+
+  <div id="progressSection">
+    <div class="progress-bar-container">
+      <div class="progress-bar indeterminate" id="progressBar"></div>
+    </div>
+    <div class="progress-text">
+      <span class="progress-stage" id="progressStage">Starte...</span>
+      <span class="progress-count" id="progressCount"></span>
+    </div>
+  </div>
+
   <div id="status"></div>
+  <div class="stats" id="stats"></div>
+
   <script src="popup.js"></script>
 </body>
 </html>
