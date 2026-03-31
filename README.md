@@ -17,7 +17,7 @@
   <img src="banner.png" alt="Site Loader Extension – Website als ZIP oder HTML herunterladen" width="700">
 </p>
 
-Eine Chrome/Chromium-Browser-Extension, die komplette Webseiten als **ZIP-Archiv** (HTML + Assets) oder als **einzelne HTML-Datei** mit eingebetteten Ressourcen herunterladet. Alle externen Ressourcen werden erfasst, CORS-Beschraenkungen umgangen und Dateien parallel geladen.
+Eine Chrome/Chromium-Browser-Extension, die komplette Webseiten als **ZIP-Archiv** (HTML + Assets) oder als **einzelne HTML-Datei** mit eingebetteten Ressourcen herunterlädt. Alle externen Ressourcen werden erfasst, CORS-Beschränkungen umgangen und Dateien parallel geladen.
 
 ---
 
@@ -28,17 +28,17 @@ Eine Chrome/Chromium-Browser-Extension, die komplette Webseiten als **ZIP-Archiv
 - **Paralleles Laden** -- Batch-Fetch mit 6 parallelen Workern und 10er-Chunk-Verarbeitung statt sequentiellem Download
 - **URL-Deduplizierung** -- Cache-Map stellt sicher, dass gleiche Ressourcen nur einmal geladen und im ZIP nur einmal gespeichert werden
 - **Fortschrittsanzeige** -- Live-Progressbar mit Stage-Labels (CSS, Bilder, Fonts, ...) und Ressourcen-Counter
-- **Timeout-Schutz** -- 15-Sekunden-Timeout pro Ressource verhindert haengende Downloads
-- **Vollstaendige Offline-Kopien** -- Alle visuellen Elemente einer Seite werden erfasst
-- **Deutsche Benutzeroberflaecheche** -- Komplett auf Deutsch lokalisiert
+- **Timeout-Schutz** -- 15-Sekunden-Timeout pro Ressource verhindert hängende Downloads
+- **Vollständige Offline-Kopien** -- Alle visuellen Elemente einer Seite werden erfasst
+- **Deutsche Benutzeroberfläche** -- Komplett auf Deutsch lokalisiert
 
 ---
 
-## Unterstuetzte Ressourcen
+## Unterstützte Ressourcen
 
 | Ressource | Details |
 |---|---|
-| **CSS-Stylesheets** | Externe Stylesheets, Inline-`<style>`-Tags, rekursive `@import`-Aufloesungoesung (mit Zirkulaerschutz, max. Tiefe 10) |
+| **CSS-Stylesheets** | Externe Stylesheets, Inline-`<style>`-Tags, rekursive `@import`-Auflösung (mit Zirkulärschutz, max. Tiefe 10) |
 | **CSS `url()`-Referenzen** | Fonts, Hintergrundbilder, Cursor-Icons und alle weiteren `url()`-Verweise innerhalb von CSS |
 | **Bilder** | `<img src>`, `<img srcset>` (responsive Bilder mit Breitenangaben), `<picture>`/`<source>` Elemente |
 | **SVG-Dateien** | `<img src="*.svg">`, `<object data="*.svg">` (mit Query-Parameter-Handling) |
@@ -47,7 +47,7 @@ Eine Chrome/Chromium-Browser-Extension, die komplette Webseiten als **ZIP-Archiv
 | **JavaScript** | Externe Scripts -- im ZIP-Modus als separate `.js`-Dateien, im HTML-Modus inline eingebettet (alle Attribute wie `async`, `defer`, `type` werden beibehalten) |
 | **Schriftarten** | In CSS referenzierte Web-Fonts via `@font-face` und `url()` (WOFF, WOFF2, TTF, OTF) |
 | **Video-Poster** | `<video poster>` Attribute (Vorschaubilder) |
-| **Preload-Ressourcen** | `<link rel="preload">` fuer Fonts, Images und Styles |
+| **Preload-Ressourcen** | `<link rel="preload">` für Fonts, Images und Styles |
 
 ---
 
@@ -58,10 +58,10 @@ Eine Chrome/Chromium-Browser-Extension, die komplette Webseiten als **ZIP-Archiv
 1. Zur [neuesten Release-Version](https://github.com/pepperonas/site-loader-extension/releases/latest) gehen
 2. ZIP-Datei unter "Assets" herunterladen
 3. ZIP-Datei entpacken
-4. Chrome/Chromium oeffnen und zu `chrome://extensions/` navigieren
+4. Chrome/Chromium öffnen und zu `chrome://extensions/` navigieren
 5. **Entwicklermodus** aktivieren (Toggle oben rechts)
 6. **Entpackte Extension laden** klicken
-7. Entpackten Ordner auswaehlen
+7. Entpackten Ordner auswählen
 
 ### Aus dem Quellcode
 
@@ -69,18 +69,18 @@ Eine Chrome/Chromium-Browser-Extension, die komplette Webseiten als **ZIP-Archiv
 git clone https://github.com/pepperonas/site-loader-extension.git
 ```
 
-1. Chrome/Chromium oeffnen und zu `chrome://extensions/` navigieren
+1. Chrome/Chromium öffnen und zu `chrome://extensions/` navigieren
 2. **Entwicklermodus** aktivieren (Toggle oben rechts)
 3. **Entpackte Extension laden** klicken
-4. Den geklonten Ordner auswaehlen
+4. Den geklonten Ordner auswählen
 
 ---
 
 ## Verwendung
 
-1. Webseite oeffnen, die heruntergeladen werden soll
+1. Webseite öffnen, die heruntergeladen werden soll
 2. Extension-Icon in der Browser-Toolbar klicken
-3. **Modus waehlen**: ZIP-Archiv (Standard) oder Einzelne HTML
+3. **Modus wählen**: ZIP-Archiv (Standard) oder Einzelne HTML
 4. **Seite herunterladen** klicken
 5. Fortschritt in der Progressbar verfolgen
 6. Datei wird automatisch im Download-Ordner gespeichert
@@ -101,7 +101,7 @@ website_2025-03-29.zip
     └── fonts/          # Web-Fonts (WOFF2, WOFF, TTF)
 ```
 
-**Vorteile**: Keine Base64-Aufblaehung (+33%), kleinere Dateien, Ressourcen koennen einzeln inspiziert werden.
+**Vorteile**: Keine Base64-Aufblähung (+33%), kleinere Dateien, Ressourcen können einzeln inspiziert werden.
 
 ### HTML-Modus
 
@@ -119,9 +119,9 @@ Erzeugt eine einzelne `.html`-Datei mit allen Ressourcen als Base64 Data-URIs ei
 |---|---|
 | `activeTab` | Zugriff auf den Inhalt des aktiven Tabs |
 | `scripting` | Dynamische Injection von Content Script und JSZip |
-| `downloads` | Download der generierten Dateien ausloesen |
+| `downloads` | Download der generierten Dateien auslösen |
 
-Die Extension benoetigt **keine** `<all_urls>`-Berechtigung und hat keinen Zugriff auf Tabs, die nicht aktiv angeklickt werden.
+Die Extension benötigt **keine** `<all_urls>`-Berechtigung und hat keinen Zugriff auf Tabs, die nicht aktiv angeklickt werden.
 
 ### Architektur
 
@@ -160,31 +160,31 @@ Die Extension benoetigt **keine** `<all_urls>`-Berechtigung und hat keinen Zugri
 
 ### Ressourcen-Pipeline
 
-Die Verarbeitung erfolgt in einer festen Reihenfolge, um Abhaengigkeiten korrekt aufzuloesen:
+Die Verarbeitung erfolgt in einer festen Reihenfolge, um Abhängigkeiten korrekt aufzulösen:
 
-1. **CSS Stylesheets** -- Externe `<link>` Stylesheets werden geladen und als `<style>`-Tags eingebettet. Dabei werden rekursiv alle `@import`-Anweisungen aufgeloest (mit Zirkulaerschutz) und saemtliche `url()`-Referenzen (Fonts, Bilder) konvertiert.
+1. **CSS Stylesheets** -- Externe `<link>` Stylesheets werden geladen und als `<style>`-Tags eingebettet. Dabei werden rekursiv alle `@import`-Anweisungen aufgelöst (mit Zirkulärschutz) und sämtliche `url()`-Referenzen (Fonts, Bilder) konvertiert.
 
-2. **Bilder** -- Alle `<img src>` werden verarbeitet. Bereits eingebettete Data-URIs (`data:...`) werden uebersprungen. Zusaetzlich werden `srcset`-Attribute auf `<img>` und `<source>`-Elementen mit allen Breitenangaben verarbeitet.
+2. **Bilder** -- Alle `<img src>` werden verarbeitet. Bereits eingebettete Data-URIs (`data:...`) werden übersprungen. Zusätzlich werden `srcset`-Attribute auf `<img>` und `<source>`-Elementen mit allen Breitenangaben verarbeitet.
 
 3. **SVGs** -- `<object data="*.svg">` Elemente werden separat behandelt, da sie ein eigenes Dokument referenzieren.
 
 4. **Inline Background Images** -- Elemente mit `style`-Attributen, die `url()` enthalten, werden gescannt und die referenzierten Bilder eingebettet.
 
-5. **Computed Background Images** -- Hintergrundbilder, die ueber CSS-Klassen (nicht inline) gesetzt werden, werden ueber `getComputedStyle()` auf dem Live-DOM ermittelt und auf den geklonten DOM uebertragen.
+5. **Computed Background Images** -- Hintergrundbilder, die über CSS-Klassen (nicht inline) gesetzt werden, werden über `getComputedStyle()` auf dem Live-DOM ermittelt und auf den geklonten DOM übertragen.
 
 6. **Favicons** -- Alle `<link rel="icon">`, `rel="shortcut icon"` und `rel="apple-touch-icon"` werden eingebettet.
 
-7. **JavaScript** -- Externe `<script src>` werden geladen. Im ZIP-Modus als separate Dateien, im HTML-Modus als Inline-Scripts (alle Attribute ausser `src` werden beibehalten).
+7. **JavaScript** -- Externe `<script src>` werden geladen. Im ZIP-Modus als separate Dateien, im HTML-Modus als Inline-Scripts (alle Attribute außer `src` werden beibehalten).
 
 8. **Video Poster** -- `<video poster>` Vorschaubilder werden eingebettet.
 
-9. **Preload-Ressourcen** -- `<link rel="preload">` fuer Fonts, Images und Styles werden eingebettet.
+9. **Preload-Ressourcen** -- `<link rel="preload">` für Fonts, Images und Styles werden eingebettet.
 
 ### CORS-Bypass-Strategie
 
 Content Scripts unterliegen der Same-Origin-Policy der Webseite. Viele CDN-Ressourcen (Google Fonts, Cloudflare, etc.) blockieren Cross-Origin-Requests ohne passenden `Access-Control-Allow-Origin`-Header.
 
-Die Extension loest das, indem alle Fetches ueber den **Background Service Worker** laufen. Dieser hat keine CORS-Restriktionen und kann beliebige URLs laden. Der Content Script sendet die URL per `chrome.runtime.sendMessage`, der Service Worker fetcht die Ressource und gibt das Ergebnis (Base64 oder ArrayBuffer) zurueck.
+Die Extension löst das, indem alle Fetches über den **Background Service Worker** laufen. Dieser hat keine CORS-Restriktionen und kann beliebige URLs laden. Der Content Script sendet die URL per `chrome.runtime.sendMessage`, der Service Worker fetcht die Ressource und gibt das Ergebnis (Base64 oder ArrayBuffer) zurück.
 
 ### Performance-Optimierungen
 
@@ -196,11 +196,11 @@ Die Extension loest das, indem alle Fetches ueber den **Background Service Worke
 
 ### Fehlerbehandlung
 
-- **Non-blocking**: Fehlgeschlagene Ressourcen (CORS, 404, Timeout) werden geloggt aber uebersprungen -- der Download wird nicht abgebrochen
+- **Non-blocking**: Fehlgeschlagene Ressourcen (CORS, 404, Timeout) werden geloggt aber übersprungen -- der Download wird nicht abgebrochen
 - **15s Timeout**: Jeder einzelne Fetch hat einen AbortController mit 15-Sekunden-Timeout
 - **Fallback-Injection**: Wenn der Content Script noch nicht geladen ist (z.B. Extension gerade installiert), wird er dynamisch injiziert
-- **JSZip-Fallback**: Wenn JSZip nicht verfuegbar ist, wird automatisch auf HTML-Modus zurueckgefallen
-- **Zirkulaerer @import-Schutz**: Bereits besuchte Import-URLs werden uebersprungen, maximale Rekursionstiefe von 10
+- **JSZip-Fallback**: Wenn JSZip nicht verfügbar ist, wird automatisch auf HTML-Modus zurückgefallen
+- **Zirkulärer @import-Schutz**: Bereits besuchte Import-URLs werden übersprungen, maximale Rekursionstiefe von 10
 
 ### Dateinamen
 
@@ -229,40 +229,40 @@ site-loader-extension/
 ├── icon48.png          # Extension-Icon 48x48
 ├── icon128.png         # Extension-Icon 128x128
 ├── CLAUDE.md           # Claude Code Projektdokumentation
-├── CHANGELOG.md        # Aenderungshistorie
+├── CHANGELOG.md        # Änderungshistorie
 └── README.md           # Diese Datei
 ```
 
 ---
 
-## Einschraenkungen
+## Einschränkungen
 
 ### Nicht eingebettet
 
 | Ressource | Grund |
 |---|---|
-| Video-/Audio-Streams | Wuerden zu riesigen Dateien fuehren (oft 100+ MB) |
+| Video-/Audio-Streams | Würden zu riesigen Dateien führen (oft 100+ MB) |
 | Canvas/WebGL-Inhalte | Dynamisch zur Laufzeit gerendert, nicht serialisierbar |
 | iFrame-Inhalte | Separate Dokumente mit eigenen Security Contexts |
-| WebSocket-/API-Daten | Laufzeit-abhaengig, koennen offline nicht reproduziert werden |
+| WebSocket-/API-Daten | Laufzeitabhängig, können offline nicht reproduziert werden |
 
 ### Hinweise
 
-- **JavaScript-Sicherheit**: Externe Scripts werden eingebettet und ausgefuehrt. Nur vertrauenswuerdige Webseiten herunterladen.
-- **Offline-Funktionalitaet**: API-Aufrufe, WebSockets und dynamisch nachgeladene Inhalte funktionieren in der heruntergeladenen Datei nicht.
-- **ZIP vs. HTML Groesse**: ZIP-Modus eliminiert den ~33% Base64-Overhead. Eine 10MB-Seite wird als ZIP ca. 10MB, als HTML ca. 13MB.
-- **Chrome-Limit**: Chrome hat ein Blob-URL-Limit von ca. 500MB. Extrem grosse Seiten koennten dieses Limit erreichen.
-- **Geschuetzte Seiten**: Chrome Web Store, `chrome://`-Seiten und andere System-URLs koennen nicht heruntergeladen werden.
+- **JavaScript-Sicherheit**: Externe Scripts werden eingebettet und ausgeführt. Nur vertrauenswürdige Webseiten herunterladen.
+- **Offline-Funktionalität**: API-Aufrufe, WebSockets und dynamisch nachgeladene Inhalte funktionieren in der heruntergeladenen Datei nicht.
+- **ZIP vs. HTML Größe**: ZIP-Modus eliminiert den ~33% Base64-Overhead. Eine 10MB-Seite wird als ZIP ca. 10MB, als HTML ca. 13MB.
+- **Chrome-Limit**: Chrome hat ein Blob-URL-Limit von ca. 500MB. Extrem große Seiten könnten dieses Limit erreichen.
+- **Geschützte Seiten**: Chrome Web Store, `chrome://`-Seiten und andere System-URLs können nicht heruntergeladen werden.
 
 ---
 
 ## Entwicklung
 
-### Aenderungen testen
+### Änderungen testen
 
-| Geaenderte Datei | Aktion |
+| Geänderte Datei | Aktion |
 |---|---|
-| `popup.html`, `popup.js` | Popup schliessen und neu oeffnen |
+| `popup.html`, `popup.js` | Popup schließen und neu öffnen |
 | `content.js` | Extension unter `chrome://extensions/` neu laden **und** Zielwebseite aktualisieren |
 | `background.js`, `manifest.json` | Extension unter `chrome://extensions/` neu laden |
 
@@ -270,17 +270,17 @@ site-loader-extension/
 
 | Kontext | Zugang |
 |---|---|
-| **Popup** | Rechtsklick auf Extension-Icon, "Popup pruefen" |
+| **Popup** | Rechtsklick auf Extension-Icon, "Popup prüfen" |
 | **Service Worker** | `chrome://extensions/` dann "Service Worker" Link bei der Extension |
 | **Content Script** | F12 auf der Zielwebseite, Console-Tab |
 
-### Haeufige Probleme
+### Häufige Probleme
 
 **"Fehler beim Laden der Ressource"** in der Console:
-- Normal fuer CORS-geschuetzte Ressourcen, die auch ueber den Service Worker nicht erreichbar sind (z.B. Auth-geschuetzte Assets). Die Extension faehrt mit den verfuegbaren Ressourcen fort.
+- Normal für CORS-geschützte Ressourcen, die auch über den Service Worker nicht erreichbar sind (z.B. Auth-geschützte Assets). Die Extension fährt mit den verfügbaren Ressourcen fort.
 
 **ZIP ist leer oder sehr klein**:
-- Pruefe die Service Worker Console auf Fehler. Moeglicherweise blockiert die Seite Script-Injection (strikte CSP-Header).
+- Prüfe die Service Worker Console auf Fehler. Möglicherweise blockiert die Seite Script-Injection (strikte CSP-Header).
 
 **Extension-Icon nicht klickbar**:
 - Chrome Web Store und System-Seiten (`chrome://`, `chrome-extension://`) blockieren Extensions.
@@ -317,9 +317,9 @@ SOFTWARE.
 
 **Martin Pfeffer** - 2025
 
-## Beitraege
+## Beiträge
 
-Beitraege, Issues und Feature-Requests sind willkommen! Bitte erstelle ein [Issue](https://github.com/pepperonas/site-loader-extension/issues) oder einen [Pull Request](https://github.com/pepperonas/site-loader-extension/pulls).
+Beiträge, Issues und Feature-Requests sind willkommen! Bitte erstelle ein [Issue](https://github.com/pepperonas/site-loader-extension/issues) oder einen [Pull Request](https://github.com/pepperonas/site-loader-extension/pulls).
 
 ---
 
@@ -327,7 +327,7 @@ Beitraege, Issues und Feature-Requests sind willkommen! Bitte erstelle ein [Issu
 
 ### Version 2.0 (2025)
 - ZIP-Archiv Download (HTML + separate Asset-Dateien)
-- Background Service Worker fuer CORS-freie Fetches
+- Background Service Worker für CORS-freie Fetches
 - Paralleles Ressourcen-Laden mit 6-Worker Batch-Processing
 - URL-Deduplizierung und Ressourcen-Caching
 - Fortschrittsanzeige mit Live-Updates und Stage-Labels
@@ -336,10 +336,10 @@ Beitraege, Issues und Feature-Requests sind willkommen! Bitte erstelle ein [Issu
 - 15s Timeout pro Ressource
 - Robustere Fehlerbehandlung mit Fallback-Mechanismen
 - ZIP-Asset-Pfad-Deduplizierung via `registerZipAsset()`
-- Komplett ueberarbeitete UI mit Modus-Toggle
+- Komplett überarbeitete UI mit Modus-Toggle
 
 ### Version 1.0 (2025)
-- Initiale Veroeffentlichung
-- Base64-Einbettung fuer alle Ressourcen (Single-HTML)
+- Initiale Veröffentlichung
+- Base64-Einbettung für alle Ressourcen (Single-HTML)
 - Deutsche Lokalisierung
 - Manifest V3 Implementierung
