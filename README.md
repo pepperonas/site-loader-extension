@@ -287,6 +287,16 @@ site-loader-extension/
 
 ---
 
+## Tests
+
+Unit-Tests laufen mit dem eingebauten Test-Runner von Node (22+), ohne Browser und ohne Abhängigkeiten. `content.js` und `background.js` werden dafür in einem `vm`-Kontext mit nachgebautem `window`, `chrome` und `fetch` geladen; `content.js` gibt seine Hilfsfunktionen nur heraus, wenn der Test-Harness den Haken `window.__siteLoaderTestHook` setzt (im Browser nie der Fall).
+
+```bash
+node --test test/*.test.js
+```
+
+Abgedeckt: URL-Auflösung, Asset-Dateinamen und Kollisionen, MIME-Endungen, `srcset`-Parser, CSS-Verarbeitung (`url()`, `@import` mit Media und Zyklen, HTML- und ZIP-Modus), Batch-Abruf mit Deduplizierung und Cache, Background-Abruf (Text, Base64 über die 32-KB-Grenze, Fehler, max. 6 parallel) sowie die Querbezüge Manifest ↔ Release-ZIP. GitHub Actions fährt die Tests bei jedem Push.
+
 ## Lizenz
 
 MIT License

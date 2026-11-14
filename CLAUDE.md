@@ -114,6 +114,10 @@ This pattern handles edge cases where the content script hasn't loaded yet (e.g.
 
 ## Development Workflow
 
+### Tests
+
+`node --test test/*.test.js` — Node 22+, no dependencies. `test/harness.js` loads `content.js`/`background.js` into a `vm` context with stubbed `window`/`chrome`/`fetch`. `content.js` exposes its pure helpers only when `window.__siteLoaderTestHook` is a function (set by the harness, never in a browser). When adding a runtime file, add it to the release ZIP list in `.github/workflows/release.yml` — `test/package.test.js` checks this.
+
 ### Testing the Extension
 
 1. **Load in Chrome**:

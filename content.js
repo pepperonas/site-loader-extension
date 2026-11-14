@@ -110,11 +110,14 @@
       }
     }
 
-    // Resolve to absolute
+    // Resolve to absolute — and dedupe again: different spellings
+    // ('a.png', '/dir/../a.png') can point to the same resource.
     var absoluteUrls = [];
+    var seenAbs = new Set();
     for (var j = 0; j < uniqueUrls.length; j++) {
       try {
-        absoluteUrls.push(new URL(uniqueUrls[j], window.location.href).href);
+        var abs = new URL(uniqueUrls[j], window.location.href).href;
+        if (!seenAbs.has(abs)) { seenAbs.add(abs); absoluteUrls.push(abs); }
       } catch (e) { /* skip invalid */ }
     }
 
@@ -271,6 +274,17 @@
   // ─── CSS Processing ────────────────────────────────────────
 
   /**
+   * Replace the first occurrence literally. String.prototype.replace with a
+   * string would interpret $&, $', $` and $$ inside the replacement — fetched
+   * CSS (e.g. `content: "$'"`) must be inserted exactly as it is.
+   */
+  function replaceOnce(text, search, replacement) {
+    var idx = text.indexOf(search);
+    if (idx === -1) return text;
+    return text.slice(0, idx) + replacement + text.slice(idx + search.length);
+  }
+
+  /**
    * Recursively resolve @import and url() in CSS text
    */
   async function processCSS(cssText, baseUrl, mode, zipAssets, visited, depth) {
@@ -296,8 +310,12 @@
       var importUrl = toAbsolute(imp.url, baseUrl);
       if (!importUrl) continue;
 
-      // Prevent circular @import
-      if (visited.has(importUrl)) continue;
+      // Circular or already inlined @import: drop it — its rules are already
+      // in the output (otherwise the url() step below would inline it again).
+      if (visited.has(importUrl)) {
+        cssText = replaceOnce(cssText, imp.full, '');
+        continue;
+      }
       visited.add(importUrl);
 
       var result = await bgFetch(importUrl, 'text');
@@ -308,12 +326,14 @@
         if (imp.media) {
           importedCSS = '@media ' + imp.media + ' { ' + importedCSS + ' }';
         }
-        cssText = cssText.replace(imp.full, importedCSS);
+        cssText = replaceOnce(cssText, imp.full, importedCSS);
       }
     }
 
     // 2. Resolve url() references (fonts, images, etc.)
-    var urlPattern = /url\(\s*(['"]?)(?!data:|blob:|javascript:)([^'")\s]+)\1\s*\)/g;
+    // '#…' = fragment reference into the same document (SVG filter/mask) —
+    // not a resource; resolving it would fetch the page itself.
+    var urlPattern = /url\(\s*(['"]?)(?!data:|blob:|javascript:|#)([^'")\s]+)\1\s*\)/g;
     var urlMatches = [];
     while ((match = urlPattern.exec(cssText)) !== null) {
       urlMatches.push({ full: match[0], quote: match[1], url: match[2] });
@@ -340,9 +360,9 @@
       var res = results[mAbsUrl];
       if (mode === 'zip') {
         var assetPath = registerZipAsset(zipAssets, mAbsUrl, 'assets/', res);
-        cssText = cssText.replace(m.full, 'url(' + m.quote + assetPath + m.quote + ')');
+        cssText = replaceOnce(cssText, m.full, 'url(' + m.quote + assetPath + m.quote + ')');
       } else {
-        cssText = cssText.replace(m.full, 'url(' + m.quote + res.data + m.quote + ')');
+        cssText = replaceOnce(cssText, m.full, 'url(' + m.quote + res.data + m.quote + ')');
       }
     }
 
@@ -353,6 +373,11 @@
 
   async function embedStyles(doc, mode, zipAssets) {
     reportProgress('styles', 'CSS-Stylesheets verarbeiten...');
+
+    // Collect the page's own <style> tags BEFORE links are turned into
+    // <style> below — otherwise already processed stylesheets would run
+    // through processCSS a second time, resolved against the wrong base URL.
+    var inlineStyles = Array.from(doc.querySelectorAll('style'));
 
     // Process <link rel="stylesheet">
     var links = Array.from(doc.querySelectorAll('link[rel="stylesheet"]'));
@@ -390,7 +415,6 @@
     }
 
     // Process existing inline <style> tags
-    var inlineStyles = Array.from(doc.querySelectorAll('style'));
     for (var k = 0; k < inlineStyles.length; k++) {
       inlineStyles[k].textContent = await processCSS(inlineStyles[k].textContent, window.location.href, mode, zipAssets);
     }
@@ -502,7 +526,15 @@
       var urlMatch = remaining.match(/^(\S+)/);
       if (!urlMatch) break;
       var url = urlMatch[1];
-      remaining = remaining.substring(url.length).trim();
+      remaining = remaining.substring(url.length);
+      // A URL ending in a comma has no descriptor ('a.jpg, b.jpg 2x'):
+      // the comma separates candidates and is not part of the URL.
+      if (/,$/.test(url)) {
+        url = url.replace(/,+$/, '');
+        if (url) entries.push({ url: url, descriptor: '' });
+        continue;
+      }
+      remaining = remaining.trim();
 
       // Extract descriptor (e.g. "2x", "300w") — ends at comma or end of string
       var descriptor = '';
@@ -1029,6 +1061,17 @@
       filename: filename,
       stats: { total: totalResources, loaded: loadedResources, failed: failedResources, assets: zipAssets.size }
     };
+  }
+
+  // Test-Naht: nur der Node-Test-Harness setzt diesen Haken (im Browser nie
+  // vorhanden). Gibt die reinen Hilfsfunktionen zum Prüfen heraus.
+  if (typeof window.__siteLoaderTestHook === 'function') {
+    window.__siteLoaderTestHook({
+      toAbsolute: toAbsolute, urlToFilename: urlToFilename, uniqueAssetPath: uniqueAssetPath,
+      simpleHash: simpleHash, getMimeExtension: getMimeExtension, parseSrcset: parseSrcset,
+      registerZipAsset: registerZipAsset, processCSS: processCSS, bgFetchBatch: bgFetchBatch,
+      resetAssetPaths: function() { usedAssetPaths.clear(); resourceCache.clear(); }
+    });
   }
 
   // ─── Message Listener ──────────────────────────────────────

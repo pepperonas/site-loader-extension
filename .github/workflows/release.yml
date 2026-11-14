@@ -27,9 +27,11 @@ jobs:
         run: |
           zip -r website-als-html-herunterladen-v${{ steps.get_version.outputs.version }}.zip \
             manifest.json \
+            background.js \
             popup.html \
             popup.js \
             content.js \
+            lib/ \
             icon16.png \
             icon48.png \
             icon128.png \
