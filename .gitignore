@@ -30,10 +30,6 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 
-# Test files
-test/
-*.test.js
-
 # Logs
 logs/
 *.log
